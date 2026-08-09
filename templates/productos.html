@@ -1,0 +1,502 @@
+{% extends "AdminHome.html" %}
+
+{% block title %}OneParfum | Productos{% endblock %}
+{% block pagina %}Productos{% endblock %}
+
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <h5 class="card-title mb-3">Agregar producto</h5>
+
+        <form method="POST"
+              action="{{ url_for('agregar_producto') }}"
+              class="row g-3"
+              enctype="multipart/form-data">
+
+            <div class="col-md-6">
+                <label class="form-label">Nombre</label>
+                <input type="text"
+                       name="nombre"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Precio</label>
+                <input type="number"
+                       step="0.01"
+                       min="0"
+                       name="precio"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Stock</label>
+                <input type="number"
+                       min="0"
+                       name="stock"
+                       class="form-control"
+                       required>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Tipo</label>
+                <select name="tipo" class="form-select">
+                    <option value="">Sin especificar</option>
+                    <option value="Nicho">Nicho</option>
+                    <option value="Árabe">Árabe</option>
+                    <option value="Diseñador">Diseñador</option>
+                    <option value="Decant">Decant</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Género</label>
+                <select name="genero" class="form-select">
+                    <option value="">Sin especificar</option>
+                    <option value="Hombre">Hombre</option>
+                    <option value="Mujer">Mujer</option>
+                    <option value="Unisex">Unisex</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Temporada del olor</label>
+                <select name="temporada" class="form-select">
+                    <option value="">Sin especificar</option>
+                    <option value="Frío">Frío</option>
+                    <option value="Calor">Calor</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+
+                <label class="form-label">
+                    Imágenes del producto
+                </label>
+
+                <input type="file"
+                       id="imagenes"
+                       class="form-control"
+                       accept="image/*"
+                       multiple>
+
+                <small class="text-muted">
+                    Selecciona varias imágenes. Puedes volver a agregar más.
+                </small>
+
+                <div id="preview-container"
+                     class="d-flex flex-wrap gap-3 mt-3">
+                </div>
+
+            </div>
+
+            <div class="col-12">
+
+                <label class="form-label">
+                    Descripción
+                </label>
+
+                <textarea name="descripcion"
+                          class="form-control"
+                          rows="2"></textarea>
+
+            </div>
+
+            <div class="col-12">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Agregar producto
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
+<div class="card">
+
+    <div class="card-body">
+
+        <h5 class="card-title mb-3">
+            Productos existentes
+        </h5>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Género</th>
+                        <th>Temporada</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for producto in productos %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if producto.imagen_principal %}
+
+                            <img src="{{ url_for('static', filename='img/productos/' + producto.imagen_principal.archivo) }}"
+                                 alt="{{ producto.nombre }}"
+                                 style="
+                                    width:48px;
+                                    height:48px;
+                                    object-fit:cover;
+                                    border-radius:6px;
+                                 ">
+
+                            {% else %}
+
+                            <img src="{{ url_for('static', filename='img/logo_2.png') }}"
+                                 alt="Sin imagen"
+                                 style="
+                                    width:48px;
+                                    height:48px;
+                                    object-fit:cover;
+                                    border-radius:6px;
+                                 ">
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ producto.nombre }}
+                        </td>
+
+                        <td>
+                            {{ producto.tipo or "—" }}
+                        </td>
+
+                        <td>
+                            {{ producto.genero or "—" }}
+                        </td>
+
+                        <td>
+                            {{ producto.temporada or "—" }}
+                        </td>
+
+                        <td>
+                            ${{ "%.2f"|format(producto.precio) }}
+                        </td>
+
+                        <td>
+                            {{ producto.stock }}
+                        </td>
+
+                        <td>
+
+                            <form method="POST"
+                                  action="{{ url_for('eliminar_producto', producto_id=producto.id) }}"
+                                  onsubmit="return confirm('¿Eliminar {{ producto.nombre }}?');">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-danger">
+                                    Eliminar
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="5"
+                            class="text-secondary">
+                            Todavía no hay productos registrados.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const inputImagenes = document.getElementById("imagenes");
+const previewContainer = document.getElementById("preview-container");
+const formulario = document.querySelector("form");
+
+let archivos = [];
+let arrastrando = null;
+
+
+inputImagenes.addEventListener("change", function () {
+
+    const nuevos = Array.from(this.files);
+
+    nuevos.forEach(archivo => {
+
+        if (!archivo.type.startsWith("image/")) {
+            return;
+        }
+
+        const existe = archivos.some(
+            item =>
+                item.name === archivo.name &&
+                item.size === archivo.size &&
+                item.lastModified === archivo.lastModified
+        );
+
+        if (!existe) {
+            archivos.push(archivo);
+        }
+
+    });
+
+    inputImagenes.value = "";
+
+    actualizarVista();
+
+});
+
+
+function actualizarVista() {
+
+    previewContainer.innerHTML = "";
+
+    archivos.forEach((archivo, indice) => {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            const elemento = document.createElement("div");
+
+            elemento.className = "imagen-item";
+
+            elemento.dataset.indice = indice;
+
+            elemento.draggable = true;
+
+            elemento.style.position = "relative";
+            elemento.style.width = "140px";
+            elemento.style.height = "140px";
+            elemento.style.cursor = "grab";
+
+
+            elemento.innerHTML = `
+
+                <img src="${e.target.result}"
+                     style="
+                        width:140px;
+                        height:140px;
+                        object-fit:cover;
+                        border-radius:8px;
+                        border:1px solid #dee2e6;
+                     ">
+
+                <span
+                    class="badge bg-primary"
+                    style="
+                        position:absolute;
+                        top:5px;
+                        left:5px;
+                        z-index:2;
+                    ">
+
+                    ${indice + 1}
+
+                </span>
+
+                <button type="button"
+                        class="btn btn-danger btn-sm"
+                        style="
+                            position:absolute;
+                            top:5px;
+                            right:5px;
+                            z-index:2;
+                            width:30px;
+                            height:30px;
+                            padding:0;
+                        "
+                        data-eliminar="${indice}">
+
+                    ×
+
+                </button>
+
+            `;
+
+
+            elemento
+                .querySelector("[data-eliminar]")
+                .addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const posicion =
+                        Number(
+                            this.dataset.eliminar
+                        );
+
+                    archivos.splice(posicion, 1);
+
+                    actualizarVista();
+
+                });
+
+
+            elemento.addEventListener(
+                "dragstart",
+                function (e) {
+
+                    arrastrando = indice;
+
+                    elemento.style.opacity = "0.4";
+
+                    e.dataTransfer.effectAllowed = "move";
+
+                }
+            );
+
+
+            elemento.addEventListener(
+                "dragend",
+                function () {
+
+                    elemento.style.opacity = "1";
+
+                    arrastrando = null;
+
+                }
+            );
+
+
+            elemento.addEventListener(
+                "dragover",
+                function (e) {
+
+                    e.preventDefault();
+
+                    e.dataTransfer.dropEffect = "move";
+
+                }
+            );
+
+
+            elemento.addEventListener(
+                "drop",
+                function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (
+                        arrastrando === null ||
+                        arrastrando === indice
+                    ) {
+                        return;
+                    }
+
+
+                    const elementoMovido =
+                        archivos[arrastrando];
+
+
+                    archivos.splice(
+                        arrastrando,
+                        1
+                    );
+
+
+                    archivos.splice(
+                        indice,
+                        0,
+                        elementoMovido
+                    );
+
+
+                    actualizarVista();
+
+                }
+            );
+
+
+            previewContainer.appendChild(elemento);
+
+        };
+
+        reader.readAsDataURL(archivo);
+
+    });
+
+}
+
+
+formulario.addEventListener(
+    "submit",
+    function (e) {
+
+        if (archivos.length === 0) {
+
+            e.preventDefault();
+
+            alert(
+                "Selecciona al menos una imagen."
+            );
+
+            return;
+
+        }
+
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        archivos.forEach(archivo => {
+
+            dataTransfer.items.add(
+                archivo
+            );
+
+        });
+
+
+        inputImagenes.files =
+            dataTransfer.files;
+
+
+        inputImagenes.name =
+            "imagenes";
+
+    }
+);
+
+</script>
+
+{% endblock %}

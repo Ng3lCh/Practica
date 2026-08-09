@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneParfum | Acceso</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+    <script>
+        const BASE_URL = "{{ request.script_root }}/";
+        const RUTA_CONSULTAS = "{{ url_for('validar_usuario') }}";
+    </script>
+</head>
+
+<body>
+
+<div class="resubody">
+<div class="ini_registros">
+
+<section class="wrapper">
+
+
+
+    <div class="form signup">
+
+        <header>Crear Cuenta</header>
+
+        <form method="POST" action="{{ url_for('registro') }}">
+
+            <input
+                type="text"
+                name="nombre"
+                placeholder="Nombre completo"
+                required>
+
+            <input
+                type="tel"
+                name="telefono"
+                placeholder="Teléfono">
+
+            <input
+                type="email"
+                name="correo"
+                placeholder="Correo electrónico">
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required>
+
+            <input
+                type="password"
+                name="confirmar"
+                placeholder="Confirmar contraseña"
+                required>
+
+            <div class="checkbox">
+
+                <input
+                    type="checkbox"
+                    id="signupCheck"
+                    required>
+
+                <label for="signupCheck">
+                    Acepto los términos y condiciones
+                </label>
+
+            </div>
+
+            <button type="submit" class="btn-oneparfum">
+                Registrarme
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="form login">
+
+        <header>Iniciar Sesión</header>
+
+        <form id="formLogin">
+
+            <input
+                type="text"
+                id="Correo"
+                placeholder="Correo o teléfono"
+                required>
+
+            <input
+                type="password"
+                id="Contrasena"
+                placeholder="Contraseña"
+                required>
+
+            <div id="mensajeLogin"></div>
+
+            <button type="button" class="btn-oneparfum" onclick="jsValidarUsuario()">
+                Iniciar sesión
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+</div>
+</div>
+
+<script>
+
+const wrapper = document.querySelector(".wrapper");
+const signupHeader = document.querySelector(".signup header");
+const loginHeader = document.querySelector(".login header");
+
+loginHeader.addEventListener("click", () => {
+    wrapper.classList.add("active");
+});
+
+signupHeader.addEventListener("click", () => {
+    wrapper.classList.remove("active");
+});
+
+</script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
