@@ -365,7 +365,7 @@ def catalogo():
         )
 
     return render_template(
-        "catalogos.html",
+        "Catalogos.html",
         usuario=current_user,
         productos=productos_disponibles,
         productos_por_tipo=productos_por_tipo,
